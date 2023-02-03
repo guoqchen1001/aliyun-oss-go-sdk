@@ -309,6 +309,9 @@ func (conn Conn) doRequest(method string, uri *url.URL, canonicalizedResource st
 	}
 
 	stNow := time.Now().UTC()
+	if conn.config.HttpHeaderDateProvider != nil {
+		stNow = conn.config.HttpHeaderDateProvider.GetHttpHeaderDate()
+	}
 	req.Header.Set(HTTPHeaderDate, stNow.Format(http.TimeFormat))
 	req.Header.Set(HTTPHeaderHost, req.Host)
 	req.Header.Set(HTTPHeaderUserAgent, conn.config.UserAgent)
